@@ -1,22 +1,57 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default defineConfig([
-  globalIgnores(['dist']),
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default [
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      globals: globals.browser,
+    ignores: ["dist/**", "node_modules/**", "coverage/**"],
+  },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      // Maximum 500 lines per file
+      "max-lines": [
+        "error",
+        {
+          max: 500,
+          skipBlankLines: false,
+          skipComments: false,
+        },
+      ],
+
+      // Disallow explicit `any`
+      "@typescript-eslint/no-explicit-any": "error",
     },
   },
-])
+  {
+    files: ["src/**/*.{js,jsx,ts,tsx}"],
+    ...js.configs.recommended,
+    rules: {
+      ...js.configs.recommended.rules,
+      "max-lines": [
+        "error",
+        {
+          max: 500,
+          skipBlankLines: false,
+          skipComments: false,
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ...tseslint.configs.recommended,
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      "max-lines": [
+        "error",
+        {
+          max: 500,
+          skipBlankLines: false,
+          skipComments: false,
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "error",
+    },
+  },
+];
